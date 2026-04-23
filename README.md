@@ -1,7 +1,6 @@
 <div align="center">
 
-# 💘 下一任
-### 前任skill（ex-skill）让ta活在了 AI 里——但我觉得是时候看向下一任美好的关系了。
+# 💘下一任Skill：前任skill（ex-skill）让ta活在了AI里——但我觉得是时候看向下一段美好的关系了。
 
 **AI 驱动的情感量化分析工具 — 用数据告诉你 ta 到底喜不喜欢你**
 
