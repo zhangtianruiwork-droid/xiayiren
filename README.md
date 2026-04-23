@@ -8,11 +8,23 @@
 [![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org)
 [![DeepSeek](https://img.shields.io/badge/AI-DeepSeek-purple)](https://platform.deepseek.com)
-[![Claude Skill](https://img.shields.io/badge/Claude-Skill-orange)](skill/SKILL.md)
+[![Based on ex-skill](https://img.shields.io/badge/based%20on-ex--skill-red)](https://github.com/therealXiaomanChu/ex-skill)
 
-> 本项目基于 [`ta-likes-me`](skill/SKILL.md) Claude Code Skill 扩展开发，新增 Web 可视化界面、微信聊天记录导入、多维图表和关系走势分析。
+> 灵感来自 [**ex-skill**](https://github.com/therealXiaomanChu/ex-skill) —— 一个把前任蒸馏成 AI Skill、让 ta 继续用 ta 的方式跟你说话的项目。
+>
+> 太惨了。所以我们做了「下一任」：别再回头分析了，看向下一段美好的关系吧。
 
 </div>
+
+---
+
+## 💡 这个项目是怎么来的
+
+[**ex-skill**](https://github.com/therealXiaomanChu/ex-skill) 做了一件很残忍又很浪漫的事：把前任的聊天记录、说话习惯、语气词全部喂给 AI，让它扮演那个人继续陪着你。
+
+「下一任」是这个故事的另一面。
+
+与其反复分析已经结束的关系，不如把同样的方法论用来判断眼前这个人 —— **ta 到底喜不喜欢你？** 用数据说话，少一点幻觉，多一点清醒。
 
 ---
 
@@ -59,8 +71,8 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/zhangtianruiwork-droid/xia-yi-ren.git
-cd xia-yi-ren/app
+git clone https://github.com/zhangtianruiwork-droid/xiayiren.git
+cd xiayiren/app
 
 # 2. 安装依赖
 npm install
@@ -99,7 +111,7 @@ xcopy /E /I skill\ %USERPROFILE%\.claude\skills\ta-likes-me\
 1. 前往 [WeFlow Releases](https://github.com/hicccc77/WeFlow/releases) 下载并安装
 2. 打开 WeFlow，选择目标联系人
 3. 导出为 **CSV** 格式
-4. 在"下一任"Web 界面上传该文件，或粘贴聊天内容
+4. 在「下一任」Web 界面上传该文件，或粘贴聊天内容
 
 > WeFlow 仅在本地运行，聊天记录不会上传到任何服务器。
 
@@ -151,14 +163,14 @@ python tools/analyze.py --input signals_input.json --output result.json
 | 行为信号 | 10% | 记住细节、主动创造独处机会、实物关心 |
 | 未来导向 + LSM | 10% | "我们"/"下次"语言、语言风格模仿 |
 
-> 评分参考：**7+ 明显有意思，4- 建议冷静，5~6 才是真正需要继续观察的区间**
+> 评分参考：**7+ 明显有意思，4- 建议冷静，5～6 才是真正需要继续观察的区间**
 
 ---
 
 ## 🏗️ 项目结构
 
 ```
-xia-yi-ren/
+xiayiren/
 ├── app/                    # React + Vite Web 界面
 │   ├── src/
 │   │   ├── App.tsx         # 主应用（分析逻辑 + UI）
@@ -195,12 +207,10 @@ xia-yi-ren/
 
 ## 🙏 鸣谢
 
-本项目站在这些优秀项目的肩膀上：
-
 | 项目 | 贡献 |
 |------|------|
-| [**ta-likes-me** Skill](skill/SKILL.md) | 原始情感分析框架与评分体系，本项目的直接前身 |
-| [**WeFlow** by hicccc77](https://github.com/hicccc77/WeFlow) | 微信聊天分析的核心指标设计（主动率、回复速度、深夜消息等）启发了本项目的维度体系 |
+| [**ex-skill** by therealXiaomanChu](https://github.com/therealXiaomanChu/ex-skill) | 直接启发来源——把前任蒸馏成 AI 的那个项目，「下一任」是它的另一面 |
+| [**WeFlow** by hicccc77](https://github.com/hicccc77/WeFlow) | 微信聊天分析核心指标设计（主动率、回复速度、深夜消息等）的灵感来源 |
 | [**PyWxDump** by xaoyaoo](https://github.com/xaoyaoo/PyWxDump) | 微信数据库密钥提取方案 |
 | [**WeChatMsg** by LC044](https://github.com/LC044/WeChatMsg) | 微信聊天记录导出工具推荐 |
 | [**shadcn/ui**](https://ui.shadcn.com) | 界面组件库 |
@@ -210,13 +220,14 @@ xia-yi-ren/
 
 ## ⚠️ 免责声明
 
-- 本工具仅供辅助参考，**情感判断最终还是靠你自己**
-- 所有聊天记录在本地处理，仅调用 DeepSeek API 进行文本分析
-- **请勿将他人聊天记录用于非授权用途**，使用本工具须遵守相关法律法规
-- 评分是参考，不是圣旨
+- **本项目仅用于个人回忆与情感疗愈，不得用于骚扰、跟踪或侵犯他人隐私。**
+- 使用本工具前，请确保你对所分析的聊天记录拥有合法权限（仅限分析自己参与的对话）。
+- 所有聊天记录在本地处理，仅将文本摘要发送至 DeepSeek API 进行分析，不存储任何个人数据。
+- 本工具输出的评分和结论仅供参考，**情感判断最终还是靠你自己**，AI 不对任何感情决策负责。
+- 评分是参考，不是圣旨。
 
 ---
 
 ## 📄 License
 
-[MIT](LICENSE) © 2025 ZHANG Tianrui
+[MIT](LICENSE) © 2026 ZHANG Tianrui
