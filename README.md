@@ -80,6 +80,7 @@ npm install
 # 3. 配置 API Key
 cp .env.example .env
 # 编辑 .env，填入你的 DeepSeek API Key（https://platform.deepseek.com/）
+# 使用 DEEPSEEK_API_KEY，不要使用 VITE_ 前缀，避免密钥进入浏览器打包产物
 
 # 4. 启动
 npm run dev

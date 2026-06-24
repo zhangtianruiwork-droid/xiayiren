@@ -85,6 +85,13 @@ USER_PROMPT_TEMPLATE = """请分析以下关于"ta"的信号，判断ta喜不喜
 
 def call_deepseek(input_data: dict) -> dict:
     """调用 DeepSeek API 进行分析"""
+    if not DEEPSEEK_API_KEY:
+        return {
+            "api_success": False,
+            "error": "DEEPSEEK_API_KEY is not set",
+            "fallback_note": "请先在环境变量中配置 DeepSeek API Key，或由 Claude 完成综合分析"
+        }
+
     try:
         import urllib.request
         import urllib.error

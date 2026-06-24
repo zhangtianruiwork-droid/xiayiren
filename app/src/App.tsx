@@ -83,8 +83,6 @@ interface AnalysisResult {
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 
-const DEEPSEEK_API_KEY = import.meta.env.VITE_DEEPSEEK_API_KEY || '';
-
 const initialFormData: FormData = {
   taName: '', relationship: '', currentStatus: '', yourFeeling: '',
   chatFiles: [], chatText: '', socialImages: [], chatImages: [], additionalNotes: '',
@@ -283,12 +281,12 @@ async function extractTextFromScreenshot(
       temperature: 0.05,
     };
 
-    const endpoints = ['/deepseek-api/chat/completions', 'https://api.deepseek.com/chat/completions'];
+    const endpoints = ['/deepseek-api/chat/completions'];
     for (const url of endpoints) {
       try {
         const resp = await fetch(url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
         if (resp.ok) {
@@ -323,8 +321,7 @@ function buildScoreBar(score: number): string {
 
 async function analyzeWithDeepSeek(
   formData: FormData,
-  chatContents: string[],
-  _imageDescriptions: string[]
+  chatContents: string[]
 ): Promise<AnalysisResult> {
   const systemPrompt = `你是一位专业的情感行为分析师，基于心理学研究和行为科学，专门分析聊天记录中的情感信号。
 你必须基于具体行为证据做出判断，禁止出于"保险"而打中间分数。
@@ -506,10 +503,9 @@ ${imageSummary}
 
 请综合以上全部信息，输出JSON分析报告。`;
 
-  // Try via Vite proxy first (dev mode), fallback to direct call
+  // Route through the local Vite proxy so API keys never reach browser bundles.
   const endpoints = [
     '/deepseek-api/chat/completions',
-    'https://api.deepseek.com/chat/completions',
   ];
 
   let lastError: Error | null = null;
@@ -519,7 +515,6 @@ ${imageSummary}
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
         },
         body: JSON.stringify({
           model: 'deepseek-chat',
@@ -582,7 +577,18 @@ function ExportGuideModal({
   open: boolean;
   onClose: () => void;
 }) {
+  type ExportGuideMethod = {
+    name: string;
+    steps: string[];
+    tip?: string;
+    color?: string;
+    badge?: string;
+    badgeColor?: string;
+    command?: string;
+  };
+
   const guide = type === 'wechat' ? wechatGuide : qqGuide;
+  const methods = guide.methods as ExportGuideMethod[];
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
   const colorMap: Record<string, { tip: string; badge: string; border: string }> = {
@@ -611,12 +617,14 @@ function ExportGuideModal({
         </DialogHeader>
         <ScrollArea className="flex-1 p-5">
           <div className="space-y-5">
-            {(guide.methods as any[]).map((method, idx) => {
-              const c = colorMap[method.color] || colorMap.blue;
+            {methods.map((method, idx) => {
+              const color = method.color ?? 'blue';
+              const c = colorMap[color] || colorMap.blue;
+              const command = method.command;
               return (
                 <div key={idx} className={`rounded-2xl border ${c.border} overflow-hidden`}>
                   {/* Header */}
-                  <div className={`px-4 py-3 flex items-center gap-2 ${method.color === 'pink' ? 'bg-pink-50' : method.color === 'red' ? 'bg-red-50' : 'bg-gray-50'}`}>
+                  <div className={`px-4 py-3 flex items-center gap-2 ${color === 'pink' ? 'bg-pink-50' : color === 'red' ? 'bg-red-50' : 'bg-gray-50'}`}>
                     <div className="w-6 h-6 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                       {idx + 1}
                     </div>
@@ -638,12 +646,12 @@ function ExportGuideModal({
                     ))}
 
                     {/* 命令复制框 */}
-                    {method.command && (
+                    {command && (
                       <div className="mt-3 rounded-xl bg-gray-900 overflow-hidden">
                         <div className="flex items-center justify-between px-3 py-1.5 bg-gray-800">
                           <span className="text-xs text-gray-400">管理员 CMD / PowerShell</span>
                           <button
-                            onClick={() => handleCopy(method.command, idx)}
+                            onClick={() => handleCopy(command, idx)}
                             className="flex items-center gap-1 text-xs text-gray-400 hover:text-white transition-colors"
                           >
                             {copiedIdx === idx ? (
@@ -654,7 +662,7 @@ function ExportGuideModal({
                           </button>
                         </div>
                         <div className="px-3 py-2.5 font-mono text-xs text-green-400 break-all">
-                          {method.command}
+                          {command}
                         </div>
                       </div>
                     )}
@@ -819,9 +827,7 @@ function App() {
       }
       setOcrPreviews(newOcrPreviews);
 
-      const imageDescriptions: string[] = []; // 内容已并入 chatContents
-
-      const result = await analyzeWithDeepSeek(formData, chatContents, imageDescriptions);
+      const result = await analyzeWithDeepSeek(formData, chatContents);
 
       setLoadingProgress(100);
       await new Promise(r => setTimeout(r, 400));
@@ -858,7 +864,7 @@ function App() {
 
       const response = await fetch('/deepseek-api/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'deepseek-chat',
           messages: [

@@ -34,7 +34,7 @@ allowed-tools: Read, Write, Edit, Bash
 | 解析 QQ 聊天记录 | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/qq_parser.py` |
 | 调用 DeepSeek 综合分析 | `Bash` → `python3 ${CLAUDE_SKILL_DIR}/tools/analyze.py` |
 
-**DeepSeek API Key**：`sk-077614bea298430a89cb0f463cbb6932`（已内置于分析脚本）
+**DeepSeek API Key**：从环境变量 `DEEPSEEK_API_KEY` 读取。不要在 Skill、脚本或文档中硬编码真实密钥。
 
 ---
 
